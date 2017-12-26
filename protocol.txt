@@ -36,3 +36,4 @@ for a block to be valid and ready to add to the blockchain, it must:
 - successfully pass an openssl message and signature integrity verification check
   which consists of verifying the transaction contents was signed by a sender's
   private key which is the private key for the public key which the address was derived from
+- have a nonce which if added to the end of the header and hashed matches the sol_hash (proof of work)
