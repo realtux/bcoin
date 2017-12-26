@@ -18,7 +18,7 @@ class Block {
     }
 
     init_new() {
-        let prev_height = cp.execSync('ls -v blockchain/blocks | tail -1').toString().trim();
+        let prev_height = cp.execSync('ls blockchain/blocks | sort -nr | head -1').toString().trim();
         let prev_block = fs.read_file_sync('blockchain/blocks/' + prev_height);
 
         this.height = +prev_height.split('.')[0] + 1;
