@@ -1,4 +1,4 @@
-const base58 = require('base58');
+const base58 = require('base-58');
 const crypto = require('crypto');
 const cp = require('child_process');
 const fs = require('fs');

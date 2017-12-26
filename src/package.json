@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "base58": "0.0.1",
+        "base-58": "0.0.1",
         "colors": "1.1.2",
         "nocamel": "*",
         "q": "1.5.1"
