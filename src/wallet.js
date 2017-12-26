@@ -91,7 +91,7 @@ switch (process.argv[2]) {
         fs.unlinkSync('tmp/sig');
         fs.unlinkSync('tmp/sig_b64');
 
-        const node = net.createConnection(4343, '192.168.86.10');
+        const node = net.createConnection(4343, '173.21.85.32');
 
         node
             .on('connect', () => {
