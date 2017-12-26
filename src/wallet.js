@@ -10,7 +10,7 @@ const menu = () => {
     --------------------
 
     commands:
-        --gen-key-pair
+        --gen-private-key
             generate a new private key and bcoin address
     `);
 };
@@ -91,7 +91,7 @@ switch (process.argv[2]) {
         fs.unlinkSync('tmp/sig');
         fs.unlinkSync('tmp/sig_b64');
 
-        const node = net.createConnection(4343, '173.21.85.32');
+        const node = net.createConnection(4343, '104.197.55.138');
 
         node
             .on('connect', () => {

@@ -1,5 +1,5 @@
-console.log('mini chain w/miner, by: b')
-console.log('-------------------------')
+console.log('bcoin');
+console.log('-----');
 
 const colors = require('colors/safe');
 const net = require('net');
@@ -7,7 +7,7 @@ const fs = require('fs');
 
 const Transaction = require('./transaction');
 
-const MASTER_NODE = '192.168.86.10';
+const MASTER_NODE = '104.197.55.138';
 const NODE_PORT = 4343;
 const MIN_NODES = 2;
 

@@ -3,7 +3,7 @@ const net = require('net');
 const Transaction = require('./transaction');
 const Block = require('./block');
 
-const node = net.createConnection(4343, '192.168.86.10');
+const node = net.createConnection(4343, '104.197.55.138');
 
 node
     .on('connect', () => {
