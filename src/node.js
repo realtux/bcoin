@@ -5,6 +5,8 @@ const colors = require('colors/safe');
 const net = require('net');
 const fs = require('fs');
 
+const Transaction = require('./transaction');
+
 const MASTER_NODE = '192.168.86.10';
 const NODE_PORT = 4343;
 const MIN_NODES = 2;
@@ -12,6 +14,8 @@ const MIN_NODES = 2;
 const name = process.env.NODE_NAME || 'default';
 
 var nodes = [];
+
+var pending_tx = [];
 
 // try to load previously known nodes
 try {
@@ -51,6 +55,32 @@ const handle = s => {
                 case 'new_node':
                     // new node notice should only propagate once
                     json.propagations > 0 && node_propagation(json.propagations);
+                    break;
+                case 'new_tx':
+                    var transaction = new Transaction();
+                    transaction.parse(json.tx);
+
+                    if (transaction.authenticated()) {
+                        console.log(colors.green('valid transaction received'));
+
+
+                        !pending_tx.some(tx => tx === transaction.tx_signed) &&
+                            pending_tx.push(transaction.tx_signed);
+
+                        s.write(JSON.stringify({
+                            result: 'accepted'
+                        }));
+                    } else {
+                        console.log(colors.red('invalid transaction received'));
+                        s.write(JSON.stringify({
+                            result: 'rejected'
+                        }));
+                    }
+                    break;
+                case 'pending_tx':
+                    s.write(JSON.stringify({
+                        txs: pending_tx
+                    }));
                     break;
             }
         } catch (e) {

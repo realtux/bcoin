@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# get to root
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR
+cd ..
+
+node8/bin/node src/miner.js $@

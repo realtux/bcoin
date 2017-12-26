@@ -1,2 +1,17 @@
 node_modules
+package-lock.json
 nodes-*.json
+node8/
+wallet/*
+!wallet/.gitkeep
+blockchain/blocks/*.dat
+!blockchain/blocks/1.dat
+!blockchain/blocks/2.dat
+!blockchain/blocks/3.dat
+!blockchain/blocks/4.dat
+!blockchain/blocks/5.dat
+!blockchain/blocks/6.dat
+!blockchain/blocks/7.dat
+!blockchain/blocks/8.dat
+!blockchain/blocks/9.dat
+!blockchain/blocks/10.dat

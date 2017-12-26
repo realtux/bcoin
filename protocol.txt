@@ -1,0 +1,26 @@
+h: [ver] [timestamp] [prev_block] [diff] [inputs] [input_hash]
+from: [addr_from1] [amt1]
+to: [addr_to1] [amt1]
+sig: [pubk_addr_from1] [msg_sig1]
+from: [addr_from2] [amt2]
+to: [addr_to2] [amt2]
+sig: [pubk_addr_from2] [msg_sig2]
+...
+from: [addr_fromn] [amtn]
+to: [addr_ton] [amtn]
+sig: [pubk_addr_fromn] [msg_sign]
+mint_to: [addr_to] [amt]
+sol_hash: 00000e0da50f6c5fe86ab6d37bf3beee04b7b49ccfc0d0c47f732e1344f37597
+sol_nonce: 338835
+
+
+---
+
+
+h: 1 1513150089910 0000000000000000000000000000000000000000000000000000000000000000 5 2 509f4ecb21dbb57c42df28efd0bab8b38e5604b189b2da0f17d0986d22cd1f1d
+from: rueQZBcuYePFSQEMdxFJ7NGGFT3ECtAtoHDSLhcHCad 0.00012345
+to: Eczh5r2yqs13p5KtP8bSD7GUWNYjC1RpHm81Q5fVEs8r 0.00012345
+sig: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA39EAN+maIv4RtyvimFMyZWCUCF5TchYqwfHJUwJkjLTNcAM5Snjtn7EoLY5lhuBKXD1nLlsjs5L7d/jUUq62SM8UXUzQeVm8j6ljZ+NBBgNiuyb8iUel0iVnlfrX6LTHkVDiCr1L9x9N/nJbEz+K1sXGd9mqyb+J20+xNqOURB1raUtHlgLHx0dmnMTHvtTp6aNK870oNLt10kuBBpVPz5H/AUsrN/8VvwFWm8SCLcrfcMSwxFLgsrx2tb9/ApKguu3D3r0JkxwUJwrc+lm72C2AnXcPIphp6+1UAZTdlDaQLAMd7Ji4hG0fPIOhE/iH+nbJgdIsc+xjzedO9gR1dQIDAQAB
+mint_to: rueQZBcuYePFSQEMdxFJ7NGGFT3ECtAtoHDSLhcHCad 1.00000000
+sol_hash: 00000e0da50f6c5fe86ab6d37bf3beee04b7b49ccfc0d0c47f732e1344f37597
+sol_nonce: 338835
