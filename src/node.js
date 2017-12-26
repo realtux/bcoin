@@ -36,9 +36,6 @@ const remove_node = node => {
 const handle = s => {
     const ip = s.remoteAddress.replace(/^.*:/, '');
 
-    // add to list of nodes
-    add_node(ip);
-
     s.on('data', data => {
         // bail on invalid json
         try {
@@ -47,12 +44,15 @@ const handle = s => {
             // handle an incoming action
             switch (json.action) {
                 case 'node_list':
+                    add_node(ip);
                     s.write(JSON.stringify({
                         own_ip: ip,
                         nodes: nodes.filter(node => node !== ip)
                     }));
                     break;
                 case 'new_node':
+                    add_node(ip);
+
                     // new node notice should only propagate once
                     json.propagations > 0 && node_propagation(json.propagations);
                     break;
