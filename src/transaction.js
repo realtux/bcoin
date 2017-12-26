@@ -81,7 +81,7 @@ class Transaction {
             }
         }
 
-        buffer += '\n-----END PUBLIC KEY-----\n';
+        buffer = buffer.trim() + '\n-----END PUBLIC KEY-----\n';
 
         return buffer;
     }
