@@ -4,7 +4,6 @@ console.log('---------------');
 require('nocamel');
 
 const colors = require('colors/safe');
-const net = require('net');
 const fs = require('fs');
 const express = require('express');
 const body_parser = require('body-parser');
@@ -50,7 +49,8 @@ const node_propagation = propagations => {
                 body: {
                     propagations: --propagations
                 }
-            });
+            })
+            .then(json => {console.log(json)});
     });
 };
 
@@ -98,7 +98,8 @@ const node_heartbeat = () => {
                                     propagations: 5
                                 },
                                 json: true
-                            });
+                            })
+                            .then(json => {});
                     });
                 })
                 .catch(err => {
@@ -134,6 +135,10 @@ routes.post('/node_list', (req, res) => {
 
 routes.post('/new_node', (req, res) => {
     add_node(req.ip_formatted);
+
+    res.json({
+        status: 'ok'
+    });
 
     // new node notice should only propagate once
     req.body.propagations > 0 && node_propagation(req.body.propagations);
@@ -189,7 +194,8 @@ routes.listen(NODE_PORT, () => {
                             body: {
                                 propagations: 5
                             }
-                        });
+                        })
+                        .then(json => {});
                 });
             });
     }
