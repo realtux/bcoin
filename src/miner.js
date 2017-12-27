@@ -3,8 +3,8 @@ const request = require('request-promise');
 const Transaction = require('./transaction');
 const Block = require('./block');
 
-//const MASTER_NODE = '104.197.55.138';
-const MASTER_NODE = '192.168.86.10';
+const MASTER_NODE = '104.197.55.138';
+//const MASTER_NODE = '192.168.86.10';
 const NODE_PORT = 4343;
 
 request
