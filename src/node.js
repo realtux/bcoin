@@ -12,8 +12,8 @@ const request = require('request-promise');
 
 const Transaction = require('./transaction');
 
-//const MASTER_NODE = '104.197.55.138';
-const MASTER_NODE = '192.168.86.10';
+const MASTER_NODE = '104.197.55.138';
+//const MASTER_NODE = '192.168.86.10';
 const NODE_PORT = 4343;
 const MIN_NODES = 2;
 
@@ -25,17 +25,17 @@ var pending_tx = [];
 
 // try to load previously known nodes
 try {
-    var data = fs.readFileSync('nodes-' + name + '.json');
+    var data = fs.read_file_sync('nodes-' + name + '.json');
     nodes = JSON.parse(data);
 } catch (e) {}
 
 const add_node = node => {
-    !~nodes.indexOf(node) && nodes.push(node);
+    !~nodes.index_of(node) && nodes.push(node);
     fs.writeFileSync('nodes-' + name + '.json', JSON.stringify(nodes));
 };
 
 const remove_node = node => {
-    ~nodes.indexOf(node) && nodes.splice(nodes.indexOf(node), 1);
+    ~nodes.index_of(node) && nodes.splice(nodes.index_of(node), 1);
     fs.writeFileSync('nodes-' + name + '.json', JSON.stringify(nodes));
 };
 

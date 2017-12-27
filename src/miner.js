@@ -1,27 +1,19 @@
-const net = require('net');
+const request = require('request-promise');
 
 const Transaction = require('./transaction');
 const Block = require('./block');
 
-const node = net.createConnection(4343, '104.197.55.138');
+const MASTER_NODE = '104.197.55.138';
+//const MASTER_NODE = '192.168.86.10';
+const NODE_PORT = 4343;
 
-node
-    .on('connect', () => {
-        // get pending tx (if any) to mine
-        node.write(JSON.stringify({
-            action: 'pending_tx'
-        }));
+request
+    ({
+        method: 'POST',
+        url: 'http://' + node + ':' + NODE_PORT + '/pending_tx',
+        json: true
     })
-    .on('data', data => {
-        // get some pending transactions
-        var json;
-
-        try {
-            json = JSON.parse(data);
-        } catch (e) { }
-
-        node.end();
-
+    .then(json => {
         var txs = json.txs;
 
         if (!txs) return;
@@ -42,5 +34,4 @@ node
 
         console.log(block.is_valid());
         console.log(block.is_solved());
-    })
-    .on('error', () => {});
+    });
