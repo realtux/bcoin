@@ -2,7 +2,11 @@ const base58 = require('base-58');
 const crypto = require('crypto');
 const cp = require('child_process');
 const fs = require('fs');
-const net = require('net');
+const request = require('request-promise');
+
+//const MASTER_NODE = '104.197.55.138';
+const MASTER_NODE = '192.168.86.10';
+const NODE_PORT = 4343;
 
 const menu = () => {
     console.log(`
@@ -91,26 +95,16 @@ switch (process.argv[2]) {
         fs.unlinkSync('tmp/sig');
         fs.unlinkSync('tmp/sig_b64');
 
-        const node = net.createConnection(4343, '104.197.55.138');
-
-        node
-            .on('connect', () => {
-                node.write(JSON.stringify({
-                    action: 'new_tx',
+        request
+            ({
+                method: 'POST',
+                url: 'http://' + MASTER_NODE + ':' + NODE_PORT + '/new_tx',
+                json: true,
+                body: {
                     tx
-                }));
+                }
             })
-            .on('data', data => {
-                var json;
-
-                try {
-                    json = JSON.parse(data);
-                    console.log(json);
-                } catch (e) { }
-
-                node.end();
-            })
-            .on('error', () => {});
+            .then(console.log);
 
         break;
 
