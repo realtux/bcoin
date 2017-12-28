@@ -15,6 +15,7 @@ ifeq ($(UNAME),Darwin)
 endif
 
 all:
+	mkdir -p tmp
 	if [ ! -d "node8" ]; then \
 		$(DOWNLOAD_CMD); \
 		unxz $(FILENAME).tar.xz; \

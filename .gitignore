@@ -4,3 +4,4 @@ nodes-*.json
 node8/
 wallet/*
 !wallet/.gitkeep
+tmp/
