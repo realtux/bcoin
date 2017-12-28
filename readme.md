@@ -5,6 +5,22 @@ bcoin is a fully functional cryptocurrency/blockchain demostration. It is writte
 
 ---
 
+### Installation
+
+#### Linux/macOS
+```
+git clone https://github.com/ebrian/bcoin
+cd bcoin
+make
+```
+
+#### Windows
+```
+Sorry, you're out of luck :/
+```
+
+---
+
 ### Major components implemented are:
 - **Blockchain**
   - Crytographically secure
