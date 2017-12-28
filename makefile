@@ -1,3 +1,7 @@
+# Copyright (c) 2017 Brian Seymour
+# Distributed under the MIT software license, see the accompanying
+# file "license" or http://www.opensource.org/licenses/mit-license.php.
+
 UNAME := $(shell uname -s)
 
 ifeq ($(UNAME),Linux)

@@ -1,3 +1,7 @@
+// Copyright (c) 2017 Brian Seymour
+// Distributed under the MIT software license, see the accompanying
+// file "license" or http://www.opensource.org/licenses/mit-license.php.
+
 require('nocamel');
 
 const crypto = require('crypto');
@@ -75,7 +79,7 @@ class Block {
         var buffer = '';
 
         this.txs.forEach(tx => buffer += tx.tx_signed + '\n');
-        buffer += this.mint_to;
+        buffer += 'mint_to: ' + this.mint_to + ' 1.00000000';
 
         this.txs_hash = crypto.createHash('sha256').update(buffer).digest('hex');
     }

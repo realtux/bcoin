@@ -1,0 +1,1 @@
+BLUEBIRD_WARNINGS=0 supervisor --extensions 'js,twig' --ignore 'node_modules' explorer.js

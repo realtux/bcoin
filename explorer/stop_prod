@@ -1,0 +1,2 @@
+cat .pid | xargs kill -15
+rm .pid

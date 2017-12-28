@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BCOIN Block Explorer</title>
+
+    <meta name="KEYWORDS" content="" />
+    <meta name="DESCRIPTION" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="language" content="en">
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet">
+    <link href="/css/master.css?{{ sails.glob.epoch }}" rel="stylesheet">
+    <script src="//code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script src="//use.fontawesome.com/2e4e55765d.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+    <script src="/js/master.js?{{ sails.glob.epoch }}"></script>
+
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png" />
+</head>
+<body>
+    <header>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+    </footer>
+</html>
