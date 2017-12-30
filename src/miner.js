@@ -4,17 +4,47 @@
 
 const request = require('request-promise');
 
+const config = require('./config');
+
 const Transaction = require('./transaction');
 const Block = require('./block');
 
-const MASTER_NODE = '104.197.55.138';
-//const MASTER_NODE = '192.168.86.10';
-const NODE_PORT = 4343;
+const menu = () => {
+console.log(`
+bcoin miner
+-----------
+
+usage: bin/miner --address [mine_to]
+`);
+};
+
+if (process.argv.length < 3) {
+    return menu();
+}
+
+var address = '';
+
+// parse args
+for (var i = 2; i < process.argv.length; ++i) {
+    if (process.argv.length === i+1) break;
+
+    switch (process.argv[i]) {
+        case '--address':
+            address = process.argv[i+1];
+            ++i;
+            break;
+    }
+}
+
+if (!address.match(/[a-zA-Z0-9]{44}/)) {
+    console.log('supplied address appears invalid');
+    return;
+}
 
 request
     ({
         method: 'POST',
-        url: 'http://' + MASTER_NODE + ':' + NODE_PORT + '/pending_tx',
+        url: 'http://' + config.master_node.host + ':' + config.master_node.port + '/pending_tx',
         json: true
     })
     .then(json => {
@@ -22,10 +52,16 @@ request
 
         if (!txs) return;
 
+        if (txs.length === 0) {
+            console.log('no transactions ready, mining empty block');
+        } else {
+            console.log(txs.length + ' transactions found, validating...');
+        }
+
         // start a new block
         var block = new Block();
         block.init_new();
-        block.add_mint('8TUZUuFuTisKv5oQ9jSLDDsGm9pCbyDrYEMcMr2Kia29');
+        block.add_mint(address);
         block.add_tx(txs);
 
         for (var i = 0; i <= 2147483648; ++i)
@@ -33,7 +69,7 @@ request
                 break;
 
         block.emit();
-        block.persist();
+        //block.persist();
         //block.broadcast();
 
         console.log(block.is_valid());

@@ -2,25 +2,34 @@
 // Distributed under the MIT software license, see the accompanying
 // file "license" or http://www.opensource.org/licenses/mit-license.php.
 
+require('nocamel');
+
 const base58 = require('base-58');
 const crypto = require('crypto');
 const cp = require('child_process');
 const fs = require('fs');
 const request = require('request-promise');
 
-const MASTER_NODE = '104.197.55.138';
-//const MASTER_NODE = '192.168.86.10';
-const NODE_PORT = 4343;
+const config = require('./config');
 
 const menu = () => {
-    console.log(`
-    bcoin wallet manager
-    --------------------
+console.log(`
+bcoin wallet manager
+--------------------
 
-    commands:
-        --gen-private-key
-            generate a new private key and bcoin address
-    `);
+commands:
+    --gen-private-key
+        generate a new private key and bcoin address
+
+    --get-public-key
+        get the raw public key which corresponds to your private key
+
+    --gen-address
+        get your bcoin address for people to send you bcoin
+
+    --send [addr] [amount]
+        sends bcoin to an address
+`);
 };
 
 if (process.argv.length <= 2) {
@@ -80,7 +89,7 @@ switch (process.argv[2]) {
     case '--send':
         var from = cp.execSync('bin/wallet --get-address').toString().trim();
         var to = process.argv[3];
-        var amt = process.argv[4];
+        var amt = (+process.argv[4]).to_fixed(8);
         var pub = cp.execSync('bin/wallet --get-public-key').toString().trim();
         var tx =
             'from: ' + from + ' ' + amt + '\n' +
@@ -102,7 +111,7 @@ switch (process.argv[2]) {
         request
             ({
                 method: 'POST',
-                url: 'http://' + MASTER_NODE + ':' + NODE_PORT + '/new_tx',
+                url: 'http://' + config.master_node.host + ':' + config.master_node.port + '/new_tx',
                 json: true,
                 body: {
                     tx

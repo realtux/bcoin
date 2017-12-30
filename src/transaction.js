@@ -2,6 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file "license" or http://www.opensource.org/licenses/mit-license.php.
 
+require('nocamel')
+
 const crypto = require('crypto');
 const cp = require('child_process');
 const fs = require('fs');
@@ -19,16 +21,31 @@ class Transaction {
         this.sig = tx[2].split(' ')[2];
     }
 
-    authenticated() {
+    is_valid() {
+        /**
+         * protocol enforcement
+         * this is where each piece of protocol.txt as it pertains to a block is checked. any
+         * failure causes block rejection
+         **/
+
+         // step 1: each tx: from and to addresses of each tx must pass regex [0-9a-zA-Z]{44}
+
+         // step 2: each tx: from and to amounts must be positive and pass regex [0-9]+\.[0-9]{8}
+
+         // step 3: each tx: from amount must be >= from address balance
+
+         // step 4: from address must be able to be made from base58(sha256(pub key in sig))
+
+         // step 5: each tx: pass an openssl message and signature integrity check
         let rand_sum = crypto
             .createHash('sha256')
-            .update('' + +new Date() + Math.floor(Math.random() * 1500))
+            .update('' + +new Date() + Math.floor(Math.random() * 15000000))
             .digest('hex');
 
         // write to files for openssl
-        fs.writeFileSync('tmp/' + rand_sum + '_sig_b64', this.sig_b64);
-        fs.writeFileSync('tmp/' + rand_sum + '_public.key', this.from_pub_pem);
-        fs.writeFileSync('tmp/' + rand_sum + '_tx', this.tx);
+        fs.write_file_sync('tmp/' + rand_sum + '_sig_b64', this.sig_b64);
+        fs.write_file_sync('tmp/' + rand_sum + '_public.key', this.from_pub_pem);
+        fs.write_file_sync('tmp/' + rand_sum + '_tx', this.tx);
 
         // test
         var result = false;
@@ -50,10 +67,10 @@ class Transaction {
             result = true;
         } catch (e) { }
 
-        fs.unlinkSync('tmp/' + rand_sum + '_sig');
-        fs.unlinkSync('tmp/' + rand_sum + '_sig_b64');
-        fs.unlinkSync('tmp/' + rand_sum + '_public.key');
-        fs.unlinkSync('tmp/' + rand_sum + '_tx');
+        fs.unlink_sync('tmp/' + rand_sum + '_sig');
+        fs.unlink_sync('tmp/' + rand_sum + '_sig_b64');
+        fs.unlink_sync('tmp/' + rand_sum + '_public.key');
+        fs.unlink_sync('tmp/' + rand_sum + '_tx');
 
         return result;
     }

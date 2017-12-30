@@ -152,7 +152,7 @@ routes.post('/new_tx', (req, res) => {
     var transaction = new Transaction();
     transaction.parse(req.body.tx);
 
-    if (transaction.authenticated()) {
+    if (transaction.is_valid()) {
         console.log(colors.green('valid transaction received'));
 
         !pending_tx.some(tx => tx === transaction.tx_signed) &&

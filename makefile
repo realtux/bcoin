@@ -16,12 +16,15 @@ endif
 
 all:
 	mkdir -p tmp
-	if [ ! -d "node8" ]; then \
+	mkdir -p lib
+	if [ ! -d "lib/node8" ]; then \
+		cd lib; \
 		$(DOWNLOAD_CMD); \
 		unxz $(FILENAME).tar.xz; \
 		tar -xf $(FILENAME).tar; \
 		rm $(FILENAME).tar; \
 		mv $(FILENAME) node8; \
+		cd ..; \
 	fi
-	cd src; ../node8/bin/npm install
+	cd src; ../lib/node8/bin/npm install
 	cd ..

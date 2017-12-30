@@ -34,7 +34,7 @@ class Block {
     }
 
     init_from(block) {
-
+        console.log('init from', block);
     }
 
     add_tx(txs) {
@@ -44,7 +44,7 @@ class Block {
             var transaction = new Transaction();
             transaction.parse(tx);
 
-            if (transaction.authenticated()) {
+            if (transaction.is_valid()) {
                 this.txs.push(transaction);
                 this.compute_input_hash();
             }
@@ -57,22 +57,48 @@ class Block {
     }
 
     is_valid() {
-        // verify hash matches previous block num
+        /**
+         * protocol enforcement
+         * this is where each piece of protocol.txt as it pertains to a block is checked. any
+         * failure causes block rejection
+         **/
 
-        // verify txs_hash matches hashing the txs
+        // step 1: block height must be one larger than the prev block in the header
+        if (!this.height) return false;
 
-        // verify mint_to rewards only 1.00000000 bcoin
+        var block_data = fs.read_file_sync('blockchain/blocks/' + (this.height - 1) + '.dat').to_string();
+
+        var block = new Block();
+        block.init_from(block_data);
+
+        return false;
+
+        // step 2: prev block hash in header must match prev block sol_hash in chain
+
+        // step 3: txs hash in header must match sha256 hash of the txs (each tx joined by \n)
+
+        // step 4: proof of work verified
+
+        // step 5: transaction checks
+        var transactions_valid = true;
+
+        this.txs.forEach(tx => {
+            var transaction = new Transaction();
+            transaction.parse(tx);
+
+            if (!transaction.is_valid()) {
+                transactions_valid = false;
+            }
+        });
+
+        if (!transactions_valid) return false;
 
         return true;
     }
 
     is_solved() {
-        let is_valid = this.is_valid();
-
         // verify nonce is the correct one
-        let solved = this.test_nonce(this.sol_nonce);
-
-        return is_valid && solved;
+        return this.test_nonce(this.sol_nonce);
     }
 
     compute_input_hash() {
