@@ -64,11 +64,26 @@ request
         block.add_mint(address);
         block.add_tx(txs);
 
-        for (var i = 0; i <= 2147483648; ++i)
-            if (block.test_nonce(i))
-                break;
+        var start = new Date();
+        var end = new Date();
+        var last_i = 1;
 
-        block.emit();
+        for (var i = 0; i <= 2147483648; ++i) {
+            if (i % 30000 === 0) {
+                end = new Date();
+                var rate = (i-last_i) / ((end - start) / 1000);
+                process.stdout.write('\rhashing ' + (rate / 1000).to_fixed(2) + ' mh/s              ');
+                last_i = i;
+                start = new Date();
+            }
+
+            if (block.test_nonce(i)) {
+                process.stdout.write('\n');
+                break;
+            }
+        }
+
+        //block.emit();
         //block.persist();
         //block.broadcast();
 

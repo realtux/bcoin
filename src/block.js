@@ -12,6 +12,8 @@ const Transaction = require('./transaction');
 
 class Block {
 
+    static get BLOCK_REWARD() { return '1.00000000'; }
+
     constructor() {
         this.height = null;
         this.timestamp = null;
@@ -34,13 +36,46 @@ class Block {
     }
 
     init_from(block) {
-        console.log('init from', block);
+        var lines = block.split('\n');
+
+        var header = lines[0].split(' ');
+
+        this.height = +header[1];
+        this.timestamp = +header[2];
+        this.prev = header[3];
+        this.difficulty = +header[4];
+        this.txs_hash = header[6];
+
+        for (var i = 1; i < lines.length; ++i) {
+            // handle mint
+            if (lines[i].match(/^mint_to: /)) {
+                var mint_to = lines[i].split(' ');
+                this.mint_to = mint_to[1];
+                ++i;
+            }
+
+            // handle tx
+            if (lines[i].match(/^from: /)) {
+                var transaction = new Transaction();
+                transaction.parse(lines[i] + '\n' + lines[i+1] + '\n' + lines[i+2]);
+
+                this.txs.push(transaction);
+                ++i; ++i;
+            }
+
+            // handle solution
+            if (lines[i].match(/^sol_hash: /)) {
+                this.sol_hash = lines[i].split(' ')[1];
+                ++i;
+                this.sol_nonce = lines[i].split(' ')[1];
+            }
+        }
     }
 
     add_tx(txs) {
         txs = Array.isArray(txs) ? txs : [txs];
 
-        txs.forEach(tx => {
+        txs.for_each(tx => {
             var transaction = new Transaction();
             transaction.parse(tx);
 
@@ -71,28 +106,46 @@ class Block {
         var block = new Block();
         block.init_from(block_data);
 
-        return false;
+        if (this.height !== block.height + 1) {
+            console.log('block validity failed: height check');
+            return false;
+        }
 
         // step 2: prev block hash in header must match prev block sol_hash in chain
+        if (this.prev !== block.sol_hash) {
+            console.log('block validity failed: prev hash doesn\'t match prev block');
+            return false;
+        }
 
         // step 3: txs hash in header must match sha256 hash of the txs (each tx joined by \n)
+        var tx_chain = this.txs.map(tx => tx.tx_signed).join('\n') + '\n' + this.mint_to_formatted;
+        var txs_hash = crypto.createHash('sha256').update(tx_chain).digest('hex');
+
+        if (this.txs_hash !== txs_hash) {
+            console.log('block validity failed: txs_hash doesn\'t match txs');
+            return false;
+        }
 
         // step 4: proof of work verified
+        if (!this.is_solved()) {
+            console.log('block validity failed: pow not complete');
+            return false;
+        }
 
         // step 5: transaction checks
         var transactions_valid = true;
 
-        this.txs.forEach(tx => {
-            var transaction = new Transaction();
-            transaction.parse(tx);
-
-            if (!transaction.is_valid()) {
+        this.txs.for_each(tx => {
+            if (!tx.is_valid())
                 transactions_valid = false;
-            }
         });
 
-        if (!transactions_valid) return false;
+        if (!transactions_valid) {
+            console.log('block validity failed: one or more txs failed validation');
+            return false;
+        }
 
+        console.log('block #' + this.height + ': valid');
         return true;
     }
 
@@ -104,8 +157,8 @@ class Block {
     compute_input_hash() {
         var buffer = '';
 
-        this.txs.forEach(tx => buffer += tx.tx_signed + '\n');
-        buffer += 'mint_to: ' + this.mint_to + ' 1.00000000';
+        this.txs.for_each(tx => buffer += tx.tx_signed + '\n');
+        buffer += this.mint_to_formatted;
 
         this.txs_hash = crypto.createHash('sha256').update(buffer).digest('hex');
     }
@@ -127,8 +180,8 @@ class Block {
 
     emit() {
         console.log('h: ' + this.header);
-        this.txs.forEach(tx => console.log(tx.tx_signed));
-        console.log('mint_to: ' + this.mint_to + ' 1.00000000');
+        this.txs.for_each(tx => console.log(tx.tx_signed));
+        console.log(this.mint_to_formatted);
         console.log('sol_hash: ' + this.sol_hash);
         console.log('sol_nonce: ' + this.sol_nonce);
     }
@@ -137,7 +190,7 @@ class Block {
         var buffer =
             'h: ' + this.header + '\n' +
             this.txs.map(tx => tx.tx_signed).join('\n') + (this.txs.length > 0 ? '\n' : '') +
-            'mint_to: ' + this.mint_to + ' 1.00000000' + '\n' +
+            this.mint_to_formatted + '\n' +
             'sol_hash: ' + this.sol_hash + '\n' +
             'sol_nonce: ' + this.sol_nonce + '\n';
 
@@ -151,6 +204,10 @@ class Block {
             this.difficulty + ' ' +
             (this.txs.length + 1) + ' ' +
             this.txs_hash;
+    }
+
+    get mint_to_formatted() {
+        return 'mint_to: ' + this.mint_to + ' ' + Block.BLOCK_REWARD;
     }
 
 }
